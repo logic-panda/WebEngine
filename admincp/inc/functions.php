@@ -16,6 +16,49 @@ function admincp_base($module="") {
 	return __PATH_ADMINCP_HOME__;;
 }
 
+function getTemplates() {
+	$templateDir = scandir(__PATH_TEMPLATES__);
+	$result = array();
+
+	foreach($cdir as $key => $value) {
+		if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
+			$result[] = $value;
+		}
+	}
+
+	return $result;
+}
+
+function extractTemplateFromRar($filepath) {
+	$rar_file = rar_open($filepath);
+	$list = rar_list($rar_file);
+
+	foreach($list as $file) {
+			$entry = rar_entry_get($rar_file, $file);
+			$entry->extract(__PATH_TEMPLATES__);
+	}
+
+	rar_close($rar_file);
+}
+
+function uploadTemplate($uploaded) {
+	$tmp_name = $uploaded["tmp_name"];
+	$name = basename($uploaded["name"]);
+	$path_parts = pathinfo($name);
+
+	try {
+		if (strtolower($path_parts['extension']) != "rar") {
+			throw new Exception('Invalid uploaded type, only rar is allowed.');
+		}
+
+		move_uploaded_file($tmp_name, "/tmp/$name");
+
+		extractTemplateFromRar("/tmp/$name");
+	} catch(\Throwable $th) {
+		throw $th;
+	}
+}
+
 function enabledisableCheckboxes($name,$checked,$e_txt,$d_txt) {
 	echo '<div class="radio">';
 	echo '<label class="radio">';

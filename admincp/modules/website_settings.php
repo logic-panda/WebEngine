@@ -18,6 +18,7 @@ $allowedSettings = array(
 	'system_active',
 	'error_reporting',
 	'website_template',
+	'website_template_upload',
 	'maintenance_page',
 	'server_name',
 	'website_title',
@@ -65,6 +66,11 @@ if(check_value($_POST['settings_submit'])) {
 		if(!check_value($_POST['website_template'])) throw new Exception('Invalid Default Template setting.');
 		if(!file_exists(__PATH_TEMPLATES__.$_POST['website_template'].'/index.php')) throw new Exception('The selected template doesn\'t exist.');
 		$setting['website_template'] = $_POST['website_template'];
+
+		# upload template
+		if($_FILE['templatefile']) {
+			uploadTemplate($_FILE['templatefile']);
+		}
 		
 		# maintenance page
 		if(!check_value($_POST['maintenance_page'])) throw new Exception('Invalid Maintenance Page setting.');
@@ -265,7 +271,24 @@ echo '<div class="col-md-12">';
 					echo '<p class="setting-description">Your website\'s default template.</p>';
 				echo '</td>';
 				echo '<td>';
-					echo '<input type="text" class="form-control" name="website_template" value="'.config('website_template',true).'" required>';
+					echo '<select class="form-control" name="website_template">';
+						$templates = getTemplates();
+						if(is_array($templates)) {
+							foreach($templates as $key => $templateName) {
+								echo '<option value="'.$templateName.'" '.(strtolower(config('website_template',true)) == strtolower($templateName) ? 'selected' : '').'>'.$templateName.'</option>';
+							}
+						}
+					echo '</select>';
+				echo '</td>';
+			echo '</tr>';
+
+			echo '<tr>';
+				echo '<td>';
+					echo '<strong>Upload Template</strong>';
+					echo '<p class="setting-description">Install new template.</p>';
+				echo '</td>';
+				echo '<td>';
+					echo '<input type="file" id="newTemplate" name="templatefile">';
 				echo '</td>';
 			echo '</tr>';
 			
