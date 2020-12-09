@@ -47,9 +47,9 @@ RUN a2dismod mpm_event \
     && a2enmod php7.3 \
     && a2enmod rewrite
 
-#COPY ./html /src
+COPY . /src
 
-RUN git clone https://github.com/misaelbg/WebEngine.git /src
+#RUN git clone https://github.com/misaelbg/WebEngine.git /src
 
 RUN rm -rf /var/www/html && mv /src /var/www/html &&\
     find /var/www/html/ -type d -exec chmod 755 {} \; &&\
