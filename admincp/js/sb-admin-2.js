@@ -26,3 +26,39 @@ $(function() {
         }
     })
 })
+
+function display(el, active) {
+	document.getElementById(el).style.display = active ? 'block' : 'none';
+}
+
+function sendFile(file) {
+    var uri = "/admincp/uploader.php?install_template=1";
+    var xhr = new XMLHttpRequest();
+    var fd = new FormData();
+
+    xhr.open("POST", uri, true);
+    xhr.onreadystatechange = function() {
+	if (xhr.readyState == 4 && xhr.status == 200) {
+	    // Handle response.
+	    alert(xhr.responseText); // handle response.
+	} else {
+	    console.error(xhr);
+	}
+
+	display('newTemplate', true);
+	display('uploader', false);
+	document.location.reload(true);
+    };
+    fd.append('templatefile', file);
+    // Initiate a multipart/form-data upload
+    xhr.send(fd);
+}
+
+function handleFiles(filesArray) {
+	display('newTemplate', false);
+	display('uploader', true);
+
+	for (var i=0; i<filesArray.length; i++) {
+		sendFile(filesArray[i]);
+	}
+}

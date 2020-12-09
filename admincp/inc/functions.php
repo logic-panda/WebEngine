@@ -19,9 +19,12 @@ function admincp_base($module="") {
 function getTemplates() {
 	$templateDir = scandir(__PATH_TEMPLATES__);
 	$result = array();
+	$ignoreDir = array('.', '..');
 
-	foreach($cdir as $key => $value) {
-		if (is_dir($dir . DIRECTORY_SEPARATOR . $value)) {
+	foreach($templateDir as $key => $value) {
+		if (in_array($value, $ignoreDir)) {
+			continue;
+		} elseif (is_dir(__PATH_TEMPLATES__ . DIRECTORY_SEPARATOR . $value)) {
 			$result[] = $value;
 		}
 	}
@@ -30,15 +33,19 @@ function getTemplates() {
 }
 
 function extractTemplateFromRar($filepath) {
-	$rar_file = rar_open($filepath);
-	$list = rar_list($rar_file);
+	try {
+		$rar_file = rar_open($filepath);
+		$list = rar_list($rar_file);
 
-	foreach($list as $file) {
-			$entry = rar_entry_get($rar_file, $file);
-			$entry->extract(__PATH_TEMPLATES__);
+		foreach($list as $file) {
+				$entry = rar_entry_get($rar_file, $file);
+				$entry->extract(__PATH_TEMPLATES__);
+		}
+
+		rar_close($rar_file);
+	} catch (\Throwable $th) {
+		throw $th;
 	}
-
-	rar_close($rar_file);
 }
 
 function uploadTemplate($uploaded) {

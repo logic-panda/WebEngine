@@ -66,11 +66,6 @@ if(check_value($_POST['settings_submit'])) {
 		if(!check_value($_POST['website_template'])) throw new Exception('Invalid Default Template setting.');
 		if(!file_exists(__PATH_TEMPLATES__.$_POST['website_template'].'/index.php')) throw new Exception('The selected template doesn\'t exist.');
 		$setting['website_template'] = $_POST['website_template'];
-
-		# upload template
-		if($_FILE['templatefile']) {
-			uploadTemplate($_FILE['templatefile']);
-		}
 		
 		# maintenance page
 		if(!check_value($_POST['maintenance_page'])) throw new Exception('Invalid Maintenance Page setting.');
@@ -288,7 +283,8 @@ echo '<div class="col-md-12">';
 					echo '<p class="setting-description">Install new template.</p>';
 				echo '</td>';
 				echo '<td>';
-					echo '<input type="file" id="newTemplate" name="templatefile">';
+					echo '<p style="display: none;" id="uploader"><i class="fa fa-spinner fa-spin fa-2x fa-fw"></i> Installing...</p>';
+					echo '<input type="file" id="newTemplate" onchange="handleFiles(this.files)" name="templatefile">';
 				echo '</td>';
 			echo '</tr>';
 			
