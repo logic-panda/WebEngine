@@ -38,7 +38,7 @@ function sendFile(file) {
 
     xhr.open("POST", uri, true);
     xhr.onreadystatechange = function() {
-	if (oXHR.readyState === 4) {
+	if (xhr.readyState === 4) {
 		if(xhr.status == 200) {
 	    		// Handle response.
 	    		alert(xhr.responseText); // handle response.
