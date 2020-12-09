@@ -42,7 +42,7 @@ function sendFile(file) {
 	    // Handle response.
 	    alert(xhr.responseText); // handle response.
 	} else {
-	    console.error(xhr);
+	    alert(`Error: ${xhr.statusText}`);
 	}
 
 	display('newTemplate', true);

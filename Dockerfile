@@ -63,8 +63,8 @@ RUN rm -rf /var/www/html && mv /src /var/www/html &&\
 
 RUN echo "short_open_tag=On" >> /etc/php/7.3/apache2/php.ini
 RUN echo "extension=rar.so" >> /etc/php/7.3/apache2/php.ini
-RUN echo "upload_max_filesize = 100M" >> /etc/php/7.3/apache2/php.ini
-RUN echo "post_max_size = 100M" >> /etc/php/7.3/apache2/php.ini
+RUN sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 50M/g' /etc/php/7.3/apache2/php.ini
+RUN sed -i 's/post_max_size = 8M/post_max_size = 100M/g' /etc/php/7.3/apache2/php.ini 
 
 RUN mkdir /var/www/uploads && chmod -R 777 /var/www/uploads
 
